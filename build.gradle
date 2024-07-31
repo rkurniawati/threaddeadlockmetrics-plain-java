@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.gooddog'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.gooddog.Application"
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    implementation 'io.micrometer:micrometer-core:latest.integration'
+    implementation 'org.slf4j:slf4j-simple:2.0.13'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
